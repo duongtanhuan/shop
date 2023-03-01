@@ -15,18 +15,31 @@ public class ItemController {
     private IItemService service;
 
     @GetMapping
-    public ResponseEntity<?> getItems() {
+    public ResponseEntity<?> getItems() throws Exception {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<?> findItemById(@PathVariable Integer itemId) {
+    public ResponseEntity<?> findItemById(@PathVariable Integer itemId) throws Exception {
         return new ResponseEntity<>(service.findItemById(itemId), HttpStatus.OK);
     }
 
     @PostMapping
-    public void addItem(@RequestBody ItemDTO dto) {
+    public ResponseEntity<?> addItem(@RequestBody ItemDTO dto) throws Exception {
         service.addItem(dto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateItem(@RequestBody ItemDTO dto) throws Exception {
+        service.updateItem(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{itemId}")
+    public ResponseEntity<?> deleteItem(@PathVariable Integer itemId) {
+        service.deleteItem(itemId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

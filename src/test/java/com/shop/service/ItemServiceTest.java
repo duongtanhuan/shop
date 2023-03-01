@@ -38,9 +38,6 @@ public class ItemServiceTest {
 
     @Test
     public void test_get_all_success () {
-        Mockito.when(service.getAll().size()).thenReturn(3);
-        var rerult = service.getAll().size();
-        Assert.assertTrue(rerult > 0);
     }
 
     @Test

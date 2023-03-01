@@ -13,4 +13,6 @@ public interface ItemMapper {
 
     ItemDTO toDto(Item item);
 
+    Item toEntity(ItemDTO dto);
+
 }
