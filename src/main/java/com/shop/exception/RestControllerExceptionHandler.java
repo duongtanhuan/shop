@@ -19,7 +19,7 @@ public class RestControllerExceptionHandler {
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<ErrorMessage>(message, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ItemCascadeDeleteError.class)
@@ -30,6 +30,28 @@ public class RestControllerExceptionHandler {
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<ErrorMessage>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<ErrorMessage> customerNotFoundException(CustomerNotFoundException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.NOT_FOUND.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ErrorMessage> cartNotFoundException(CartNotFoundException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.NOT_FOUND.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 }

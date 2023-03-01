@@ -34,13 +34,12 @@ public class ItemServiceImpl implements IItemService {
 
     @Override
     public ItemDTO findItemById(Integer id) throws Exception {
-        String msg = String.format("Not found %s", "item");
         try {
             Optional<Item> item = repository.findItemById(id);
             if (item.isPresent()) {
                 return ItemMapper.INSTANCE.toDto(item.get());
             } else {
-                throw new ItemNotFoundException(msg);
+                throw new ItemNotFoundException(String.format("Not found %s", "item"));
             }
         } catch (Exception e) {
             throw new Exception();
@@ -72,11 +71,10 @@ public class ItemServiceImpl implements IItemService {
 
     @Override
     public void deleteItem(Integer id) {
-        String msg = String.format("Item delete is %s", "disabled");
         try {
             repository.deleteById(id);
         } catch (Exception e) {
-            throw new ItemCascadeDeleteError(msg);
+            throw new ItemCascadeDeleteError(String.format("Item delete is %s", "disabled"));
         }
     }
 }

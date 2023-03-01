@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "cart_detail")
@@ -22,5 +23,10 @@ public class CartDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    private Integer quantity;
+
+    @Column(name="date_added")
+    private Date dateAdded;
 
 }
