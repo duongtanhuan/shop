@@ -5,13 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDetailDTO {
+public class OrderRequestDTO {
 
     private Integer id;
-    private Integer itemId;
-    private Integer quantity;
+
+    private List<OrderDetailRequestDTO> orderDetails;
+
+    private Integer customerId;
+
+    private Date createDate;
 }

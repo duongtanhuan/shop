@@ -15,23 +15,23 @@ public class ItemController {
     private IItemService service;
 
     @GetMapping
-    public ResponseEntity<?> getItems() throws Exception {
+    public ResponseEntity<?> getItems() {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<?> findItemById(@PathVariable Integer itemId) throws Exception {
+    public ResponseEntity<?> findItemById(@PathVariable Integer itemId) {
         return new ResponseEntity<>(service.findItemById(itemId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> addItem(@RequestBody ItemDTO dto) throws Exception {
+    public ResponseEntity<?> addItem(@RequestBody ItemDTO dto) {
         service.addItem(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateItem(@RequestBody ItemDTO dto) throws Exception {
+    public ResponseEntity<?> updateItem(@RequestBody ItemDTO dto) {
         service.updateItem(dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }

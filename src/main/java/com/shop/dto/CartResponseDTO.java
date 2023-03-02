@@ -1,6 +1,8 @@
 package com.shop.dto;
 
-import com.shop.model.Customer;
+import com.shop.mapper.CartDetailMapper;
+import com.shop.mapper.CustomerMapper;
+import com.shop.model.Cart;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +13,13 @@ import java.util.List;
 public class CartResponseDTO {
 
     private Integer id;
+    private CustomerDTO customer;
 
-    private Customer customer;
+    private List<CartDetailResponseDTO> detailDTOS;
 
-    private List<CartDetailDTO> cartDetails;
-
+    public CartResponseDTO(Cart cart) {
+        this.id = cart.getId();
+        this.customer = CustomerMapper.INSTANCE.toDto(cart.getCustomer());
+        this.detailDTOS = CartDetailMapper.INSTANCE.toDtoList(cart.getCartDetails());
+    }
 }

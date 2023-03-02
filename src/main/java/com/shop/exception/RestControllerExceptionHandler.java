@@ -11,19 +11,8 @@ import java.util.Date;
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
 
-    @ExceptionHandler(ItemNotFoundException.class)
-    public ResponseEntity<ErrorMessage> itemNotFoundException(ItemNotFoundException ex, WebRequest request) {
-        ErrorMessage message = new ErrorMessage(
-                HttpStatus.NOT_FOUND.value(),
-                new Date(),
-                ex.getMessage(),
-                request.getDescription(false));
-
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(ItemCascadeDeleteError.class)
-    public ResponseEntity<ErrorMessage> itemCascadeDeleteError(ItemCascadeDeleteError ex, WebRequest request) {
+    public ResponseEntity<ErrorMessage> handleInternalServerError(RuntimeException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 new Date(),
@@ -33,8 +22,9 @@ public class RestControllerExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<ErrorMessage> customerNotFoundException(CustomerNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(value = {ItemNotFoundException.class, CustomerNotFoundException.class,
+            CartNotFoundException.class})
+    public ResponseEntity<ErrorMessage> handleNotFound(RuntimeException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),
                 new Date(),
@@ -44,14 +34,14 @@ public class RestControllerExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CartNotFoundException.class)
-    public ResponseEntity<ErrorMessage> cartNotFoundException(CartNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(value = {QuantityLessThanOneException.class, CartDuplicateException.class})
+    public ResponseEntity<ErrorMessage> handleBadRequest(RuntimeException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
 
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

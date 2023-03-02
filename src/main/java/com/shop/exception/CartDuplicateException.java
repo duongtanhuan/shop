@@ -1,10 +1,10 @@
 package com.shop.exception;
 
-public class ItemCascadeDeleteError extends RuntimeException {
+public class CartDuplicateException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public ItemCascadeDeleteError(String msg) {
+    public CartDuplicateException(String msg) {
         super(msg);
     }
 }

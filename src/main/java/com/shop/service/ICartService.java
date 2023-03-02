@@ -5,9 +5,9 @@ import com.shop.dto.CartResponseDTO;
 
 public interface ICartService {
 
-    CartResponseDTO findCartByCustomerId(Integer customerId) throws Exception;
+    CartResponseDTO findCartByCustomerId(Integer customerId);
 
-    CartResponseDTO addItemsToCart(CartRequestDTO dto) throws Exception;
+    CartResponseDTO addItemsToCart(CartRequestDTO dto);
 
     void updateItemsToCart(CartRequestDTO dto);
 

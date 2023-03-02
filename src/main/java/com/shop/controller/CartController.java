@@ -14,13 +14,24 @@ public class CartController {
     private ICartService service;
 
     @GetMapping(value = "/{customerId}")
-    public ResponseEntity<?> findCartByCustomerId(@PathVariable Integer customerId) throws Exception {
+    public ResponseEntity<?> findCartByCustomerId(@PathVariable Integer customerId) {
         return new ResponseEntity<>(service.findCartByCustomerId(customerId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> addItemsToCart(@RequestBody CartRequestDTO dto) throws Exception {
+    public ResponseEntity<?> addItemsToCart(@RequestBody CartRequestDTO dto) {
         return new ResponseEntity<>(service.addItemsToCart(dto), HttpStatus.OK);
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateItemsToCart(@RequestBody CartRequestDTO dto) {
+        service.updateItemsToCart(dto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping(value = "/{customerId}")
+    public ResponseEntity<?> deleteItemInCartByCartDetailId(@PathVariable Integer customerId) {
+        service.deleteItemInCartByCartDetailId(customerId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

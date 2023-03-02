@@ -11,11 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartRequestDTO {
+public class CustomerDTO {
 
     private Integer id;
-
-    private Integer customerId;
-
-    private List<CartDetailRequestDTO> cartDetails;
 }

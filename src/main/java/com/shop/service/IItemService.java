@@ -5,13 +5,13 @@ import com.shop.dto.ItemDTO;
 import java.util.List;
 
 public interface IItemService {
-    List<ItemDTO> getAll() throws Exception;
+    List<ItemDTO> getAll();
 
-    ItemDTO findItemById(Integer id) throws Exception;
+    ItemDTO findItemById(Integer id);
 
-    void addItem(ItemDTO dto) throws Exception;
+    void addItem(ItemDTO dto);
 
-    void updateItem(ItemDTO dto) throws Exception;
+    void updateItem(ItemDTO dto);
 
     void deleteItem(Integer id);
 }

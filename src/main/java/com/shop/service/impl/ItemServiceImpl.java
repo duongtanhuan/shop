@@ -10,30 +10,28 @@ import com.shop.service.IItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class ItemServiceImpl implements IItemService {
 
     @Autowired
     private ItemRepository repository;
 
     @Override
-    public List<ItemDTO> getAll() throws Exception {
+    public List<ItemDTO> getAll() {
         try {
             return repository.getAll().stream().map(entity ->
                     ItemMapper.INSTANCE.toDto(entity)).collect(Collectors.toList());
         } catch (Exception e) {
-            throw new Exception();
+            throw e;
         }
     }
 
     @Override
-    public ItemDTO findItemById(Integer id) throws Exception {
+    public ItemDTO findItemById(Integer id) {
         try {
             Optional<Item> item = repository.findItemById(id);
             if (item.isPresent()) {
@@ -42,22 +40,22 @@ public class ItemServiceImpl implements IItemService {
                 throw new ItemNotFoundException(String.format("Not found %s", "item"));
             }
         } catch (Exception e) {
-            throw new Exception();
+            throw e;
         }
     }
 
     @Override
-    public void addItem(ItemDTO dto) throws Exception {
+    public void addItem(ItemDTO dto) {
         try {
             Item item = ItemMapper.INSTANCE.toEntity(dto);
             repository.save(item);
         } catch (Exception e) {
-            throw new Exception();
+            throw e;
         }
     }
 
     @Override
-    public void updateItem(ItemDTO dto) throws Exception {
+    public void updateItem(ItemDTO dto) {
         try {
             Optional<Item> item = repository.findItemById(dto.getId());
             if (item.isPresent()) {
@@ -65,7 +63,7 @@ public class ItemServiceImpl implements IItemService {
                 repository.save(item1);
             }
         } catch (Exception e) {
-            throw new Exception();
+            throw e;
         }
     }
 
