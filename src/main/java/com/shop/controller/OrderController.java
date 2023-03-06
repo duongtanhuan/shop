@@ -36,7 +36,7 @@ public class OrderController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
   
-  @PostMapping (value = "/{customerId}")
+  @PostMapping (value = "latestOrder/{customerId}")
   public ResponseEntity<OrderResponse> getLatestOrderByCustomerId(@PathVariable Integer customerId) {
     return new ResponseEntity<>(service.getLatestOrderByCustomerId(customerId), HttpStatus.OK);
   }
