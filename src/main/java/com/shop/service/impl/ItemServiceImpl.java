@@ -47,17 +47,18 @@ public class ItemServiceImpl implements IItemService {
   }
   
   @Override
-  public void addItem(ItemRequest request) {
+  public boolean addItem(ItemRequest request) {
     try {
       Item item = ItemMapper.INSTANCE.toEntity(request);
       repository.save(item);
     } catch (Exception e) {
       throw e;
     }
+    return true;
   }
   
   @Override
-  public void updateItem(ItemRequest request) {
+  public boolean updateItem(ItemRequest request) {
     try {
       Optional<Item> item = repository.findById(request.getId());
       if (item.isPresent()) {
@@ -67,6 +68,7 @@ public class ItemServiceImpl implements IItemService {
     } catch (Exception e) {
       throw e;
     }
+    return true;
   }
   
   @Override

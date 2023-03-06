@@ -12,9 +12,9 @@ public interface IItemService {
   
   ItemResponse findItemById(Integer id);
   
-  void addItem(ItemRequest request);
+  boolean addItem(ItemRequest request);
   
-  void updateItem(ItemRequest request);
+  boolean updateItem(ItemRequest request);
   
   void deleteItem(Integer id);
 }
