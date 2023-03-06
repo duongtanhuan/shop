@@ -1,17 +1,20 @@
 package com.shop.service;
 
-import com.shop.dto.ItemDTO;
-
+import com.shop.dto.ItemRequest;
+import com.shop.dto.ItemResponse;
 import java.util.List;
 
+/**
+ * IItemService.
+ * */
 public interface IItemService {
-    List<ItemDTO> getAll();
-
-    ItemDTO findItemById(Integer id);
-
-    void addItem(ItemDTO dto);
-
-    void updateItem(ItemDTO dto);
-
-    void deleteItem(Integer id);
+  List<ItemResponse> getAll();
+  
+  ItemResponse findItemById(Integer id);
+  
+  void addItem(ItemRequest request);
+  
+  void updateItem(ItemRequest request);
+  
+  void deleteItem(Integer id);
 }

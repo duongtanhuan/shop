@@ -1,16 +1,16 @@
 package com.shop.service;
 
-import com.shop.dto.OrderRequestDTO;
-import com.shop.dto.OrderResponseDTO;
-import org.springframework.stereotype.Service;
-
+import com.shop.dto.OrderRequest;
+import com.shop.dto.OrderResponse;
 import java.util.List;
 
+/**
+ * IOrderService.
+ * */
 public interface IOrderService {
-
-    List<OrderResponseDTO>  getAll(Integer customerId);
-
-    void createOrder(OrderRequestDTO requestDTO);
-
-    void getLastestOrder(Integer customerId);
+  List<OrderResponse>  getOrdersAllByCustomerId(Integer customerId);
+  
+  void createOrder(OrderRequest request);
+  
+  OrderResponse getLatestOrderByCustomerId(Integer customerId);
 }

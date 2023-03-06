@@ -5,13 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
+/**
+ * OrderDetailRequest.
+ * */
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerDTO {
-
-    private Integer id;
+public class OrderDetailRequest {
+  private Integer id;
+  
+  private Integer itemId;
+  
+  private Integer quantity;
 }

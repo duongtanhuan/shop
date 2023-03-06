@@ -5,15 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * OrderDetailRequest.
+ * */
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDetailRequestDTO {
-
-    private Integer id;
-
-    private Integer itemId;
-
-    private Integer quantity;
+public class OrderDetailResponse {
+  private Integer id;
+  
+  private ItemResponse item;
+  
+  private Integer quantity;
 }
