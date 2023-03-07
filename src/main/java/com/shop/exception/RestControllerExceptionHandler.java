@@ -16,7 +16,8 @@ public class RestControllerExceptionHandler {
   /**
    * handleInternalServerError.
    * */
-  @ExceptionHandler(ItemCascadeDeleteError.class)
+  @ExceptionHandler(value = {ItemCascadeDeleteError.class, SystemErrorException.class,
+          CartDetailCascadeDeleteError.class})
   public ResponseEntity<ErrorMessage> handleInternalServerError(RuntimeException ex,
                                                                 WebRequest request) {
     ErrorMessage message = new ErrorMessage(

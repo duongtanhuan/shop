@@ -2,10 +2,12 @@ package com.shop.service.impl;
 
 import com.shop.dto.CartRequest;
 import com.shop.dto.CartResponse;
+import com.shop.exception.CartDetailCascadeDeleteError;
 import com.shop.exception.CartDetailNotFoundException;
 import com.shop.exception.CartNotFoundException;
 import com.shop.exception.ItemNotFoundException;
 import com.shop.exception.QuantityLessThanOneException;
+import com.shop.exception.SystemErrorException;
 import com.shop.model.Cart;
 import com.shop.model.CartDetail;
 import com.shop.model.Item;
@@ -14,8 +16,10 @@ import com.shop.repository.CartRepository;
 import com.shop.repository.ItemRepository;
 import com.shop.service.ICartService;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -34,19 +38,16 @@ public class CartServiceImpl implements ICartService {
   @Autowired
   private CartDetailRepository cartDetailRepository;
   
+  @Autowired
+  private MessageSource messageSource;
+  
   @Override
   public CartResponse findCartByCustomerId(Integer customerId) {
-    try {
-      Optional<Cart> cart = cartRepository.findCartByCustomerId(customerId);
-      if (cart.isPresent()) {
-        return new CartResponse(cart.get());
-      } else {
-        // do not hardcode error message, please read the message from message.properties file
-        throw new CartNotFoundException(String.format("Not found %s", "cart"));
-      }
-    } catch (Exception e) {
-      // do not throw e, use particular exception
-      throw e;
+    Optional<Cart> cart = cartRepository.findCartByCustomerId(customerId);
+    if (cart.isPresent()) {
+      return new CartResponse(cart.get());
+    } else {
+      throw new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH));
     }
   }
   
@@ -73,28 +74,25 @@ public class CartServiceImpl implements ICartService {
               if (detailRequest.getQuantity() > 0) {
                 detail.setQuantity(detailRequest.getQuantity());
               } else {
-                // do not hardcode error message, please read the message from message.properties file
-                throw new QuantityLessThanOneException("Item quantity should be bigger than one");
+                throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
+                        Locale.ENGLISH));
               }
               detail.setItem(item);
               detail.setDateAdded(new Date());
               cart.getCartDetails().add(detail);
             } else {
-              // do not hardcode error message, please read the message from message.properties file
-              throw new ItemNotFoundException(String.format("Not found %s", "item"));
+              throw new ItemNotFoundException(messageSource.getMessage("EBL102", null,
+                      Locale.ENGLISH));
             }
           }
         }
         savedCart = cartRepository.save(cart);
         savedCartDto = new CartResponse(savedCart);
       } else {
-        // do not hardcode error message, please read the message from message.properties file
-        throw new CartNotFoundException(String.format("Not found %s", "cart"));
+        throw new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH));
       }
-      
     } catch (Exception e) {
-      // use particular exception
-      throw e;
+      throw new SystemErrorException(messageSource.getMessage("EBL203", null, Locale.ENGLISH));
     }
     return savedCartDto;
   }
@@ -116,23 +114,22 @@ public class CartServiceImpl implements ICartService {
               if (detailDto.getQuantity() > 0) {
                 cartDetail.setQuantity(detailDto.getQuantity());
               } else {
-                // do not hardcode error message, please read the message from message.properties file
-                throw new QuantityLessThanOneException("Item quantity should be bigger than one");
+                throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
+                        Locale.ENGLISH));
               }
             } else {
-              // do not hardcode error message, please read the message from message.properties file
-              throw new ItemNotFoundException(String.format("Not found %s", "item"));
+              throw new ItemNotFoundException(messageSource.getMessage("EBL102", null,
+                      Locale.ENGLISH));
             }
             cartDetailRepository.save(cartDetail);
           } else {
-            // do not hardcode error message, please read the message from message.properties file
-            throw new CartDetailNotFoundException(String.format("Not found %s", "cart detail"));
+            throw new CartDetailNotFoundException(messageSource.getMessage("EBL204", null,
+                    Locale.ENGLISH));
           }
         }
       }
     } catch (Exception e) {
-      // use particular exception
-      throw e;
+      throw new SystemErrorException(messageSource.getMessage("EBL205", null, Locale.ENGLISH));
     }
   }
   
@@ -141,8 +138,8 @@ public class CartServiceImpl implements ICartService {
     try {
       cartDetailRepository.deleteById(cartDetailId);
     } catch (Exception e) {
-      // use particular exception
-      throw e;
+      throw new CartDetailCascadeDeleteError(String.format(messageSource.getMessage("EBL206", null,
+              Locale.ENGLISH)));
     }
   }
 }
