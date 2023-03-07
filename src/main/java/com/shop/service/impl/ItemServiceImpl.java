@@ -28,6 +28,7 @@ public class ItemServiceImpl implements IItemService {
       return repository.findAll().stream().map(ItemMapper.INSTANCE::toDto)
               .collect(Collectors.toList());
     } catch (Exception e) {
+      // do not throw e, use particular exception
       throw e;
     }
   }
@@ -39,9 +40,11 @@ public class ItemServiceImpl implements IItemService {
       if (item.isPresent()) {
         return ItemMapper.INSTANCE.toDto(item.get());
       } else {
+        // do not hardcode error message, please read the message from message.properties file
         throw new ItemNotFoundException(String.format("Not found %s", "item"));
       }
     } catch (Exception e) {
+      // do not throw e, use particular exception
       throw e;
     }
   }
@@ -52,6 +55,7 @@ public class ItemServiceImpl implements IItemService {
       Item item = ItemMapper.INSTANCE.toEntity(request);
       repository.save(item);
     } catch (Exception e) {
+      // user particular exception
       throw e;
     }
     return true;
@@ -66,6 +70,7 @@ public class ItemServiceImpl implements IItemService {
         repository.save(item1);
       }
     } catch (Exception e) {
+      // use particular exception
       throw e;
     }
     return true;
@@ -76,6 +81,7 @@ public class ItemServiceImpl implements IItemService {
     try {
       repository.deleteById(id);
     } catch (Exception e) {
+      // do not hardcode error message, please read the message from message.properties file
       throw new ItemCascadeDeleteError(String.format("Item delete is %s", "disabled"));
     }
   }

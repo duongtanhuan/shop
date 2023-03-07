@@ -41,9 +41,11 @@ public class CartServiceImpl implements ICartService {
       if (cart.isPresent()) {
         return new CartResponse(cart.get());
       } else {
+        // do not hardcode error message, please read the message from message.properties file
         throw new CartNotFoundException(String.format("Not found %s", "cart"));
       }
     } catch (Exception e) {
+      // do not throw e, use particular exception
       throw e;
     }
   }
@@ -71,12 +73,14 @@ public class CartServiceImpl implements ICartService {
               if (detailRequest.getQuantity() > 0) {
                 detail.setQuantity(detailRequest.getQuantity());
               } else {
+                // do not hardcode error message, please read the message from message.properties file
                 throw new QuantityLessThanOneException("Item quantity should be bigger than one");
               }
               detail.setItem(item);
               detail.setDateAdded(new Date());
               cart.getCartDetails().add(detail);
             } else {
+              // do not hardcode error message, please read the message from message.properties file
               throw new ItemNotFoundException(String.format("Not found %s", "item"));
             }
           }
@@ -84,10 +88,12 @@ public class CartServiceImpl implements ICartService {
         savedCart = cartRepository.save(cart);
         savedCartDto = new CartResponse(savedCart);
       } else {
+        // do not hardcode error message, please read the message from message.properties file
         throw new CartNotFoundException(String.format("Not found %s", "cart"));
       }
       
     } catch (Exception e) {
+      // use particular exception
       throw e;
     }
     return savedCartDto;
@@ -110,18 +116,22 @@ public class CartServiceImpl implements ICartService {
               if (detailDto.getQuantity() > 0) {
                 cartDetail.setQuantity(detailDto.getQuantity());
               } else {
+                // do not hardcode error message, please read the message from message.properties file
                 throw new QuantityLessThanOneException("Item quantity should be bigger than one");
               }
             } else {
+              // do not hardcode error message, please read the message from message.properties file
               throw new ItemNotFoundException(String.format("Not found %s", "item"));
             }
             cartDetailRepository.save(cartDetail);
           } else {
+            // do not hardcode error message, please read the message from message.properties file
             throw new CartDetailNotFoundException(String.format("Not found %s", "cart detail"));
           }
         }
       }
     } catch (Exception e) {
+      // use particular exception
       throw e;
     }
   }
@@ -131,6 +141,7 @@ public class CartServiceImpl implements ICartService {
     try {
       cartDetailRepository.deleteById(cartDetailId);
     } catch (Exception e) {
+      // use particular exception
       throw e;
     }
   }

@@ -42,6 +42,7 @@ public class OrderDetailServiceImpl implements IOrderService {
       return orders.stream().map(OrderMapper.INSTANCE::toDto)
               .collect(Collectors.toList());
     } catch (Exception e) {
+      // do not throw e, use particular exception
       throw e;
     }
   }
@@ -53,6 +54,7 @@ public class OrderDetailServiceImpl implements IOrderService {
       var customerOptional = customerRepository.findById(request.getCustomerId());
       var order = new Order();
       order.setCreateDate(new Date());
+      // this step is too complex, can we separate this into smaller methods ?
       if (customerOptional.isPresent()) {
         
         if (!CollectionUtils.isEmpty(customerOptional.get().getCart().getCartDetails())) {
@@ -66,6 +68,7 @@ public class OrderDetailServiceImpl implements IOrderService {
               if (itemOptional.isPresent()) {
                 detail.setItem(itemOptional.get());
               } else {
+                // do not hardcode error message, please read the message from message.properties file
                 throw new ItemNotFoundException(String.format("Not found item"));
               }
               detail.setQuantity(detailRequest.getQuantity());
@@ -74,13 +77,16 @@ public class OrderDetailServiceImpl implements IOrderService {
           }
           order.setCustomer(customerOptional.get());
         } else {
+          // do not hardcode error message, please read the message from message.properties file
           throw new EmptyCartException(String.format("No items in cart"));
         }
       } else {
+        // do not hardcode error message, please read the message from message.properties file
         throw new CustomerNotFoundException(String.format("Not found customer"));
       }
       orderRepository.save(order);
     } catch (Exception e) {
+      // do not throw e, use particular exception
       throw e;
     }
   }
@@ -96,6 +102,7 @@ public class OrderDetailServiceImpl implements IOrderService {
       }
       return OrderMapper.INSTANCE.toDto(order);
     } catch (Exception e) {
+      // do not throw e, use particular exception
       throw e;
     }
   }
