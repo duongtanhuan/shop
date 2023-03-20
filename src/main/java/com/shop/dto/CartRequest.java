@@ -1,6 +1,5 @@
 package com.shop.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +18,5 @@ public class CartRequest {
   
   private Integer customerId;
   
-  private List<CartDetailRequest> cartDetails;
+  private CartDetailRequest cartDetail;
 }

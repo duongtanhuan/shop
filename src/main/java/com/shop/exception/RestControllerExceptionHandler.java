@@ -33,7 +33,7 @@ public class RestControllerExceptionHandler {
    * handleNotFound.
    * */
   @ExceptionHandler(value = {ItemNotFoundException.class, CustomerNotFoundException.class,
-        CartNotFoundException.class})
+        CartNotFoundException.class, CartDetailNotFoundException.class})
   public ResponseEntity<ErrorMessage> handleNotFound(RuntimeException ex, WebRequest request) {
     ErrorMessage message = new ErrorMessage(
             HttpStatus.NOT_FOUND.value(),

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+
 /**
  * ItemServiceImpl.
  * */
@@ -63,13 +64,12 @@ public class ItemServiceImpl implements IItemService {
   @Override
   public boolean updateItem(ItemRequest request) {
     try {
-      Optional<Item> item = repository.findById(request.getId());
-      if (item.isPresent()) {
-        Item item1 = ItemMapper.INSTANCE.toEntity(request);
-        repository.save(item1);
-      } else {
-        throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
-      }
+      repository.findById(request.getId()).orElseThrow(() ->
+              new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH)));
+      Item item1 = ItemMapper.INSTANCE.toEntity(request);
+      repository.save(item1);
+    } catch (ItemNotFoundException e) {
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
     } catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL104", null, Locale.ENGLISH));
     }

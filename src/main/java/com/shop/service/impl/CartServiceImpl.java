@@ -17,7 +17,6 @@ import com.shop.repository.ItemRepository;
 import com.shop.service.ICartService;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -43,58 +42,43 @@ public class CartServiceImpl implements ICartService {
   
   @Override
   public CartResponse findCartByCustomerId(Integer customerId) {
-    Optional<Cart> cart = cartRepository.findCartByCustomerId(customerId);
-    if (cart.isPresent()) {
-      return new CartResponse(cart.get());
-    } else {
-      throw new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH));
-    }
+    Cart cart = cartRepository.findCartByCustomerId(customerId).orElseThrow(() ->
+            new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH)));
+    return new CartResponse(cart);
   }
   
   @Override
   @Transactional(rollbackFor = Exception.class)
   public CartResponse addItemsToCart(CartRequest request) {
-    CartResponse savedCartDto;
     Cart savedCart;
     try {
-      Optional<Cart> cartOptional = cartRepository.findCartByCustomerId(request.getCustomerId());
+      Cart cart = cartRepository.findCartByCustomerId(request.getCustomerId()).orElseThrow(() ->
+              new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH)));
       
-      if (cartOptional.isPresent()) {
-        var cart = cartOptional.get();
-        
-        if (!CollectionUtils.isEmpty(request.getCartDetails())) {
-          for (var detailRequest : request.getCartDetails()) {
-            var detail = new CartDetail();
-            Optional<Item> optionalItem = itemRepository.findById(detailRequest.getItemId());
-            
-            if (optionalItem.isPresent()) {
-              var item = optionalItem.get();
-              detail.setCart(cart);
-              
-              if (detailRequest.getQuantity() > 0) {
-                detail.setQuantity(detailRequest.getQuantity());
-              } else {
-                throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
-                        Locale.ENGLISH));
-              }
-              detail.setItem(item);
-              detail.setDateAdded(new Date());
-              cart.getCartDetails().add(detail);
-            } else {
-              throw new ItemNotFoundException(messageSource.getMessage("EBL102", null,
-                      Locale.ENGLISH));
-            }
-          }
-        }
-        savedCart = cartRepository.save(cart);
-        savedCartDto = new CartResponse(savedCart);
+      var detail = new CartDetail();
+      Item item = itemRepository.findById(request.getCartDetail().getItemId()).orElseThrow(
+              () -> new ItemNotFoundException(messageSource.getMessage(
+                      "EBL102", null, Locale.ENGLISH)));
+      detail.setCart(cart);
+      
+      if (request.getCartDetail().getQuantity() > 0) {
+        detail.setQuantity(request.getCartDetail().getQuantity());
       } else {
-        throw new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH));
+        throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
+                Locale.ENGLISH));
       }
-    } catch (Exception e) {
+      detail.setItem(item);
+      detail.setDateAdded(new Date());
+      cart.getCartDetails().add(detail);
+      savedCart = cartRepository.save(cart);
+    } catch (CartNotFoundException e) {
+      throw  new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH));
+    } catch (ItemNotFoundException e) {
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
+    }  catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL203", null, Locale.ENGLISH));
     }
-    return savedCartDto;
+    return new CartResponse(savedCart);
   }
   
   @Override
@@ -102,32 +86,33 @@ public class CartServiceImpl implements ICartService {
     try {
       var cart = findCartByCustomerId(request.getCustomerId());
       if (!CollectionUtils.isEmpty(cart.getCartDetails())) {
-        for (var detailDto : request.getCartDetails()) {
-          var cartDetailOptional = cartDetailRepository.findById(detailDto.getId());
-          
-          if (cartDetailOptional.isPresent()) {
-            var cartDetail = cartDetailOptional.get();
-            Optional<Item> item = itemRepository.findById(detailDto.getItemId());
-            if (item.isPresent()) {
-              cartDetail.setItem(item.get());
-              
-              if (detailDto.getQuantity() > 0) {
-                cartDetail.setQuantity(detailDto.getQuantity());
-              } else {
-                throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
-                        Locale.ENGLISH));
-              }
-            } else {
-              throw new ItemNotFoundException(messageSource.getMessage("EBL102", null,
-                      Locale.ENGLISH));
-            }
-            cartDetailRepository.save(cartDetail);
-          } else {
-            throw new CartDetailNotFoundException(messageSource.getMessage("EBL204", null,
-                    Locale.ENGLISH));
-          }
+        var cartDetail = cartDetailRepository.findById(request.getCartDetail().getId())
+                .orElseThrow(() ->
+                        new CartDetailNotFoundException(messageSource.getMessage("EBL204",
+                        null, Locale.ENGLISH)));
+        
+        var item = itemRepository.findById(request.getCartDetail().getItemId())
+                .orElseThrow(() -> new ItemNotFoundException(
+                        messageSource.getMessage("EBL102", null, Locale.ENGLISH)));
+        
+        cartDetail.setItem(item);
+        
+        if (request.getCartDetail().getQuantity() > 0) {
+          cartDetail.setQuantity(request.getCartDetail().getQuantity());
+        } else {
+          throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
+                  Locale.ENGLISH));
         }
+        cartDetailRepository.save(cartDetail);
       }
+    } catch (QuantityLessThanOneException e) {
+      throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
+              Locale.ENGLISH));
+    } catch (ItemNotFoundException e) {
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
+    } catch (CartDetailNotFoundException e) {
+      throw new CartDetailNotFoundException(messageSource.getMessage("EBL204",
+              null, Locale.ENGLISH));
     } catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL205", null, Locale.ENGLISH));
     }

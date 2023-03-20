@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * OrderController.
  * */
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("orders")
 public class OrderController {
@@ -37,7 +39,8 @@ public class OrderController {
   }
   
   @PostMapping (value = "latestOrder/{customerId}")
-  public ResponseEntity<OrderResponse> getLatestOrderByCustomerId(@PathVariable Integer customerId) {
+  public ResponseEntity<OrderResponse> getLatestOrderByCustomerId(@PathVariable
+                                                                    Integer customerId) {
     return new ResponseEntity<>(service.getLatestOrderByCustomerId(customerId), HttpStatus.OK);
   }
 }

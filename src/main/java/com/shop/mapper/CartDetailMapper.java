@@ -16,6 +16,7 @@ public interface CartDetailMapper {
   CartDetailMapper INSTANCE = Mappers.getMapper(CartDetailMapper.class);
   
   List<CartDetailResponse> toDtoList(List<CartDetail> cartDetails);
+  CartDetailResponse toDto(CartDetail cartDetail);
 }
 
 
