@@ -35,6 +35,9 @@ public class Order {
   @JoinColumn(name = "customer_id")
   private Customer customer;
   
+  @Column(name = "total_price")
+  private double totalPrice;
+  
   @Column(name = "create_date")
   private Date createDate;
 }

@@ -5,6 +5,7 @@ import com.shop.dto.OrderResponse;
 import com.shop.exception.CartNotFoundException;
 import com.shop.exception.CustomerNotFoundException;
 import com.shop.exception.EmptyCartException;
+import com.shop.exception.EmptyOrderDetailsException;
 import com.shop.exception.ItemNotFoundException;
 import com.shop.exception.SystemErrorException;
 import com.shop.mapper.OrderMapper;
@@ -80,6 +81,9 @@ public class OrderDetailServiceImpl implements IOrderService {
         var itemId = orderDetail.getItem().getId();
         cartDetailRepository.deleteCartDetailByCartIdAndItemId(cart.getId(), itemId);
       }
+    } catch (EmptyOrderDetailsException e) {
+      throw new EmptyOrderDetailsException(messageSource.getMessage("EBL306",
+              null, Locale.ENGLISH));
     } catch (ItemNotFoundException e) {
       throw new ItemNotFoundException(messageSource.getMessage("EBL102", null,
               Locale.ENGLISH));
@@ -95,25 +99,28 @@ public class OrderDetailServiceImpl implements IOrderService {
   
   private Order setValuesForOrder(OrderRequest request, Customer customer) {
     var order = new Order();
-    
+    double totalPrice = 0;
     if (!CollectionUtils.isEmpty(customer.getCart().getCartDetails())) {
       if (!CollectionUtils.isEmpty(request.getOrderDetails())) {
         order.setOrderDetails(new ArrayList<>());
         for (var detailRequest : request.getOrderDetails()) {
           var detail = new OrderDetail();
-          var itemOptional = itemRepository.findById(detailRequest.getItemId());
           detail.setOrder(order);
           
-          if (itemOptional.isPresent()) {
-            detail.setItem(itemOptional.get());
-          } else {
-            throw new ItemNotFoundException(messageSource.getMessage("EBL102", null,
-                    Locale.ENGLISH));
-          }
+          var item = itemRepository.findById(detailRequest.getItemId()).orElseThrow(() ->
+            new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH)));
+          
+          detail.setItem(item);
           detail.setQuantity(detailRequest.getQuantity());
+          totalPrice = totalPrice + (detailRequest.getQuantity() * item.getPrice());
+          order.setTotalPrice(detailRequest.getQuantity() * item.getPrice());
           order.getOrderDetails().add(detail);
         }
+      } else {
+        throw new EmptyOrderDetailsException(messageSource.getMessage("EBL306",
+                null, Locale.ENGLISH));
       }
+      order.setTotalPrice(totalPrice);
       order.setCustomer(customer);
     } else {
       throw new EmptyCartException(messageSource.getMessage("EBL303", null, Locale.ENGLISH));

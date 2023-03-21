@@ -20,5 +20,7 @@ public class CartDetailResponse {
   
   private Integer quantity;
   
+  private Integer itemId;
+  
   private Date dateAdded;
 }

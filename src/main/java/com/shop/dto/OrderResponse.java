@@ -17,6 +17,8 @@ import lombok.Setter;
 public class OrderResponse {
   private Integer id;
   
+  private double totalPrice;
+  
   private CustomerResponse customer;
   
   private Set<OrderDetailResponse> orderDetails;

@@ -46,7 +46,7 @@ public class ItemServiceImpl implements IItemService {
     if (item.isPresent()) {
       return ItemMapper.INSTANCE.toDto(item.get());
     } else {
-      throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH));
     }
   }
   
@@ -64,12 +64,11 @@ public class ItemServiceImpl implements IItemService {
   @Override
   public boolean updateItem(ItemRequest request) {
     try {
-      repository.findById(request.getId()).orElseThrow(() ->
-              new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH)));
-      Item item1 = ItemMapper.INSTANCE.toEntity(request);
-      repository.save(item1);
+     Item item = repository.findById(request.getId()).orElseThrow(() ->
+              new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH)));
+      repository.save(item);
     } catch (ItemNotFoundException e) {
-      throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102B", null, Locale.ENGLISH));
     } catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL104", null, Locale.ENGLISH));
     }

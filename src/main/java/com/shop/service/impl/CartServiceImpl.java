@@ -31,7 +31,6 @@ public class CartServiceImpl implements ICartService {
   @Autowired
   private ItemRepository itemRepository;
   
-  @Autowired
   private CartRepository cartRepository;
   
   @Autowired
@@ -43,7 +42,7 @@ public class CartServiceImpl implements ICartService {
   @Override
   public CartResponse findCartByCustomerId(Integer customerId) {
     Cart cart = cartRepository.findCartByCustomerId(customerId).orElseThrow(() ->
-            new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH)));
+            new CartNotFoundException(messageSource.getMessage("EBL201A", null, Locale.ENGLISH)));
     return new CartResponse(cart);
   }
   
@@ -53,18 +52,18 @@ public class CartServiceImpl implements ICartService {
     Cart savedCart;
     try {
       Cart cart = cartRepository.findCartByCustomerId(request.getCustomerId()).orElseThrow(() ->
-              new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH)));
+              new CartNotFoundException(messageSource.getMessage("EBL201B", null, Locale.ENGLISH)));
       
       var detail = new CartDetail();
       Item item = itemRepository.findById(request.getCartDetail().getItemId()).orElseThrow(
               () -> new ItemNotFoundException(messageSource.getMessage(
-                      "EBL102", null, Locale.ENGLISH)));
+                      "EBL102A", null, Locale.ENGLISH)));
       detail.setCart(cart);
       
       if (request.getCartDetail().getQuantity() > 0) {
         detail.setQuantity(request.getCartDetail().getQuantity());
       } else {
-        throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
+        throw new QuantityLessThanOneException(messageSource.getMessage("EBL202B", null,
                 Locale.ENGLISH));
       }
       detail.setItem(item);
@@ -72,9 +71,9 @@ public class CartServiceImpl implements ICartService {
       cart.getCartDetails().add(detail);
       savedCart = cartRepository.save(cart);
     } catch (CartNotFoundException e) {
-      throw  new CartNotFoundException(messageSource.getMessage("EBL201", null, Locale.ENGLISH));
+      throw  new CartNotFoundException(messageSource.getMessage("EBL201A", null, Locale.ENGLISH));
     } catch (ItemNotFoundException e) {
-      throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH));
     }  catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL203", null, Locale.ENGLISH));
     }
@@ -93,7 +92,7 @@ public class CartServiceImpl implements ICartService {
         
         var item = itemRepository.findById(request.getCartDetail().getItemId())
                 .orElseThrow(() -> new ItemNotFoundException(
-                        messageSource.getMessage("EBL102", null, Locale.ENGLISH)));
+                        messageSource.getMessage("EBL102B", null, Locale.ENGLISH)));
         
         cartDetail.setItem(item);
         
@@ -109,7 +108,7 @@ public class CartServiceImpl implements ICartService {
       throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
               Locale.ENGLISH));
     } catch (ItemNotFoundException e) {
-      throw new ItemNotFoundException(messageSource.getMessage("EBL102", null, Locale.ENGLISH));
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102C", null, Locale.ENGLISH));
     } catch (CartDetailNotFoundException e) {
       throw new CartDetailNotFoundException(messageSource.getMessage("EBL204",
               null, Locale.ENGLISH));
