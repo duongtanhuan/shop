@@ -23,8 +23,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'javax.validation:validation-api:2.0.1.Final'
 	compileOnly 'org.projectlombok:lombok'
+	compileOnly "org.flywaydb:flyway-mysql"
 	runtimeOnly 'com.h2database:h2'
+//	compile "org.flywaydb:flyway-core:9.8.1"
+//	implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.13'
+//	runtimeOnly group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: '9.5.1'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
