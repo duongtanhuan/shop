@@ -48,7 +48,7 @@ public class RestControllerExceptionHandler {
    * handleBadRequest.
    * */
   @ExceptionHandler(value = {QuantityLessThanOneException.class, EmptyCartException.class,
-          EmptyOrderDetailsException.class})
+          EmptyOrderDetailsException.class, IncorrectLoginInformationException.class, IncorrectRegisterInformationException.class})
   public ResponseEntity<ErrorMessage> handleBadRequest(RuntimeException ex, WebRequest request) {
     ErrorMessage message = new ErrorMessage(
             HttpStatus.BAD_REQUEST.value(),

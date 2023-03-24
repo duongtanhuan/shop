@@ -64,6 +64,16 @@ public class OrderDetailServiceImpl implements IOrderService {
   }
   
   @Override
+  public List<OrderResponse> getPendingOrdersByStatus() {
+    try {
+      List<Order> orders = orderRepository.findOrdersByStatus(false);
+      return orders.stream().map(OrderMapper.INSTANCE::toDto).collect(Collectors.toList());
+    } catch (Exception e) {
+      throw new SystemErrorException(messageSource.getMessage("EBL316", null, Locale.ENGLISH));
+    }
+  }
+  
+  @Override
   @Transactional(rollbackFor = Exception.class)
   public void createOrder(OrderRequest request) {
     try {

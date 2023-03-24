@@ -21,6 +21,8 @@ public class OrderResponse {
   
   private CustomerResponse customer;
   
+  private Boolean status;
+  
   private Set<OrderDetailResponse> orderDetails;
   
   Date createDate;

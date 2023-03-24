@@ -1,6 +1,5 @@
 package com.shop.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -40,4 +39,6 @@ public class Order {
   
   @Column(name = "create_date")
   private Date createDate;
+  
+  private Boolean status;
 }

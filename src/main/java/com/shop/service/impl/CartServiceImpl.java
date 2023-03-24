@@ -32,6 +32,7 @@ public class CartServiceImpl implements ICartService {
   @Autowired
   private ItemRepository itemRepository;
   
+  @Autowired
   private CartRepository cartRepository;
   
   @Autowired
