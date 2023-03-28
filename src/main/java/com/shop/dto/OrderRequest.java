@@ -20,6 +20,8 @@ public class OrderRequest {
   
   private Set<OrderDetailRequest> orderDetails;
   
+  private Boolean status;
+  
   private Integer customerId;
   
   private Date createDate;

@@ -5,6 +5,7 @@ import com.shop.dto.CartResponse;
 import com.shop.exception.CartDetailCascadeDeleteError;
 import com.shop.exception.CartDetailNotFoundException;
 import com.shop.exception.CartNotFoundException;
+import com.shop.exception.CustomerNotFoundException;
 import com.shop.exception.ItemNotFoundException;
 import com.shop.exception.QuantityLessThanOneException;
 import com.shop.exception.SystemErrorException;
@@ -13,10 +14,13 @@ import com.shop.model.CartDetail;
 import com.shop.model.Item;
 import com.shop.repository.CartDetailRepository;
 import com.shop.repository.CartRepository;
+import com.shop.repository.CustomerRepository;
 import com.shop.repository.ItemRepository;
 import com.shop.service.ICartService;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -41,6 +45,9 @@ public class CartServiceImpl implements ICartService {
   @Autowired
   private MessageSource messageSource;
   
+  @Autowired
+  private CustomerRepository customerRepository;
+  
   @Override
   public CartResponse findCartByCustomerId(Integer customerId) {
     Cart cart = cartRepository.findCartByCustomerId(customerId).orElseThrow(() ->
@@ -53,14 +60,22 @@ public class CartServiceImpl implements ICartService {
   public CartResponse addItemsToCart(CartRequest request) {
     Cart savedCart;
     try {
-      Cart cart = cartRepository.findCartByCustomerId(request.getCustomerId()).orElseThrow(() ->
-              new CartNotFoundException(messageSource.getMessage("EBL201B", null, Locale.ENGLISH)));
+      Optional<Cart> cartOptional = cartRepository.findCartByCustomerId(request.getCustomerId());
+
+      var customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new
+              CustomerNotFoundException(messageSource.getMessage("EBL304", null, Locale.ENGLISH)));
+      var cart = new Cart();
+      cart.setCustomer(customer);
+      
+      if (cartOptional.isPresent()) {
+        cart = cartOptional.get();
+      }
       
       var detail = new CartDetail();
+      detail.setCart(cart);
       Item item = itemRepository.findById(request.getCartDetail().getItemId()).orElseThrow(
               () -> new ItemNotFoundException(messageSource.getMessage(
                       "EBL102A", null, Locale.ENGLISH)));
-      detail.setCart(cart);
       
       if (request.getCartDetail().getQuantity() > 0) {
         detail.setQuantity(request.getCartDetail().getQuantity());
@@ -70,10 +85,14 @@ public class CartServiceImpl implements ICartService {
       }
       detail.setItem(item);
       detail.setDateAdded(new Date());
+
+      cart.setCartDetails(new ArrayList<>());
       cart.getCartDetails().add(detail);
       savedCart = cartRepository.save(cart);
-    } catch (CartNotFoundException e) {
-      throw  new CartNotFoundException(messageSource.getMessage("EBL201A", null, Locale.ENGLISH));
+
+    } catch (CustomerNotFoundException e) {
+      throw  new CustomerNotFoundException(messageSource.getMessage("EBL304B", null,
+              Locale.ENGLISH));
     } catch (ItemNotFoundException e) {
       throw new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH));
     }  catch (Exception e) {

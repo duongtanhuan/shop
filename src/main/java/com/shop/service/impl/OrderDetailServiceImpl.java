@@ -80,17 +80,19 @@ public class OrderDetailServiceImpl implements IOrderService {
       var customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new
               CustomerNotFoundException(messageSource.getMessage("EBL304", null, Locale.ENGLISH)));
       var order = setValuesForOrder(request, customer);
-      
+      order.setStatus(request.getStatus());
       order.setCreateDate(new Date());
       var savedOrder = orderRepository.save(order);
       
-      var cart = cartRepository.findCartByCustomerId(customer.getCart().getId()).orElseThrow(
-              () -> new CartNotFoundException(messageSource.getMessage("EBL201",
-                      null, Locale.ENGLISH)));
+      var cart = cartRepository.findCartByCustomerId(customer.getId()).orElseThrow(() -> new
+              CartNotFoundException(messageSource.getMessage("EBL201A", null, Locale.ENGLISH)));
       for (var orderDetail : savedOrder.getOrderDetails()) {
         var itemId = orderDetail.getItem().getId();
         cartDetailRepository.deleteCartDetailByCartIdAndItemId(cart.getId(), itemId);
       }
+    } catch (CartNotFoundException e) {
+      throw new CartNotFoundException(messageSource.getMessage("EBL201A",
+              null, Locale.ENGLISH));
     } catch (EmptyOrderDetailsException e) {
       throw new EmptyOrderDetailsException(messageSource.getMessage("EBL306",
               null, Locale.ENGLISH));

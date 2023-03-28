@@ -63,9 +63,13 @@ public class ItemServiceImpl implements IItemService {
   @Override
   public boolean updateItem(ItemRequest request) {
     try {
-     Item item = repository.findById(request.getId()).orElseThrow(() ->
-              new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH)));
-      repository.save(item);
+      var itemOption =  repository.findById(request.getId());
+      
+      if (itemOption.isPresent()) {
+      repository.save(ItemMapper.INSTANCE.toEntity(request));
+      } else {
+        throw new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH));
+      }
     } catch (ItemNotFoundException e) {
       throw new ItemNotFoundException(messageSource.getMessage("EBL102B", null, Locale.ENGLISH));
     } catch (Exception e) {
