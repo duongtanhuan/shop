@@ -64,9 +64,9 @@ public class OrderDetailServiceImpl implements IOrderService {
   }
   
   @Override
-  public List<OrderResponse> getPendingOrdersByCustomerIdAndStatus(Integer customerId) {
+  public List<OrderResponse> getPendingOrdersByStatus() {
     try {
-      List<Order> orders = orderRepository.findOrdersByCustomerIdAndStatus(customerId, false);
+      List<Order> orders = orderRepository.findOrdersByStatus(false);
       return orders.stream().map(OrderMapper.INSTANCE::toDto).collect(Collectors.toList());
     } catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL316", null, Locale.ENGLISH));

@@ -32,11 +32,9 @@ public class OrderController {
     return new ResponseEntity<>(service.getOrdersAllByCustomerId(customerId), HttpStatus.OK);
   }
   
-  @GetMapping(value = "/pendingOrders/{customerId}")
-  public ResponseEntity<List<OrderResponse>> getPendingOrdersByStatus(@PathVariable
-                                                                        Integer customerId) {
-    return new ResponseEntity<>(service.getPendingOrdersByCustomerIdAndStatus(customerId),
-            HttpStatus.OK);
+  @GetMapping(value = "/pendingOrders")
+  public ResponseEntity<List<OrderResponse>> getPendingOrdersByStatus() {
+    return new ResponseEntity<>(service.getPendingOrdersByStatus(), HttpStatus.OK);
   }
   
   @PostMapping
