@@ -10,6 +10,8 @@ import java.util.List;
 public interface IOrderService {
   List<OrderResponse>  getOrdersAllByCustomerId(Integer customerId);
   
+  List<OrderResponse>  getPendingOrdersByCustomerIdAndStatus(Integer customerId);
+  
   List<OrderResponse>  getPendingOrdersByStatus();
   
   void createOrder(OrderRequest request);

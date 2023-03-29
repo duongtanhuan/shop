@@ -64,12 +64,22 @@ public class OrderDetailServiceImpl implements IOrderService {
   }
   
   @Override
+  public List<OrderResponse> getPendingOrdersByCustomerIdAndStatus(Integer customerId) {
+    try {
+      List<Order> orders = orderRepository.findOrdersByCustomerIdAndStatus(customerId, false);
+      return orders.stream().map(OrderMapper.INSTANCE::toDto).collect(Collectors.toList());
+    } catch (Exception e) {
+      throw new SystemErrorException(messageSource.getMessage("EBL316A", null, Locale.ENGLISH));
+    }
+  }
+  
+  @Override
   public List<OrderResponse> getPendingOrdersByStatus() {
     try {
       List<Order> orders = orderRepository.findOrdersByStatus(false);
       return orders.stream().map(OrderMapper.INSTANCE::toDto).collect(Collectors.toList());
     } catch (Exception e) {
-      throw new SystemErrorException(messageSource.getMessage("EBL316", null, Locale.ENGLISH));
+      throw new SystemErrorException(messageSource.getMessage("EBL316B", null, Locale.ENGLISH));
     }
   }
   
