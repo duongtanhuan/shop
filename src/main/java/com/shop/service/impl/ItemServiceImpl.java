@@ -40,6 +40,8 @@ public class ItemServiceImpl implements IItemService {
   
   @Override
   public ItemResponse findItemById(Integer id) {
+    try {
+    
     Optional<Item> item = repository.findById(id);
     
     if (item.isPresent()) {
@@ -47,26 +49,28 @@ public class ItemServiceImpl implements IItemService {
     } else {
       throw new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH));
     }
+    } catch (ItemNotFoundException e) {
+      throw new ItemNotFoundException(messageSource.getMessage("EBL102B", null, Locale.ENGLISH));
+    }
   }
   
   @Override
-  public boolean addItem(ItemRequest request) {
+  public Item addItem(ItemRequest request) {
     try {
       Item item = ItemMapper.INSTANCE.toEntity(request);
-      repository.save(item);
+      return repository.save(item);
     } catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL103", null, Locale.ENGLISH));
     }
-    return true;
   }
   
   @Override
-  public boolean updateItem(ItemRequest request) {
+  public Item updateItem(ItemRequest request) {
     try {
       var itemOption =  repository.findById(request.getId());
       
       if (itemOption.isPresent()) {
-      repository.save(ItemMapper.INSTANCE.toEntity(request));
+        return repository.save(ItemMapper.INSTANCE.toEntity(request));
       } else {
         throw new ItemNotFoundException(messageSource.getMessage("EBL102A", null, Locale.ENGLISH));
       }
@@ -75,16 +79,16 @@ public class ItemServiceImpl implements IItemService {
     } catch (Exception e) {
       throw new SystemErrorException(messageSource.getMessage("EBL104", null, Locale.ENGLISH));
     }
-    return true;
   }
   
   @Override
-  public void deleteItem(Integer id) {
+  public Boolean deleteItem(Integer id) {
     try {
       repository.deleteById(id);
     } catch (Exception e) {
       throw new ItemCascadeDeleteError(messageSource.getMessage("EBL105", null,
               Locale.ENGLISH));
     }
+    return true;
   }
 }

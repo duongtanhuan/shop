@@ -2,6 +2,7 @@ package com.shop.service;
 
 import com.shop.dto.ItemRequest;
 import com.shop.dto.ItemResponse;
+import com.shop.model.Item;
 import java.util.List;
 
 /**
@@ -12,9 +13,9 @@ public interface IItemService {
   
   ItemResponse findItemById(Integer id);
   
-  boolean addItem(ItemRequest request);
+  Item addItem(ItemRequest request);
   
-  boolean updateItem(ItemRequest request);
+  Item updateItem(ItemRequest request);
   
-  void deleteItem(Integer id);
+  Boolean deleteItem(Integer id);
 }

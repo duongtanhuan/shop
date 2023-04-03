@@ -28,9 +28,6 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly "org.flywaydb:flyway-mysql"
 	runtimeOnly 'com.h2database:h2'
-//	compile "org.flywaydb:flyway-core:9.8.1"
-//	implementation group: 'org.flywaydb', name: 'flyway-core', version: '8.5.13'
-//	runtimeOnly group: 'org.flywaydb', name: 'flyway-gradle-plugin', version: '9.5.1'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'

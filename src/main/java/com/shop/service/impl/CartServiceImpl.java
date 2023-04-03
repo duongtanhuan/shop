@@ -50,9 +50,14 @@ public class CartServiceImpl implements ICartService {
   
   @Override
   public CartResponse findCartByCustomerId(Integer customerId) {
-    Cart cart = cartRepository.findCartByCustomerId(customerId).orElseThrow(() ->
+    try {
+    
+      Cart cart = cartRepository.findCartByCustomerId(customerId).orElseThrow(() ->
             new CartNotFoundException(messageSource.getMessage("EBL201A", null, Locale.ENGLISH)));
-    return new CartResponse(cart);
+      return new CartResponse(cart);
+    } catch (Exception e) {
+      throw new CartNotFoundException(messageSource.getMessage("EBL201A", null, Locale.ENGLISH));
+    }
   }
   
   @Override
@@ -104,7 +109,9 @@ public class CartServiceImpl implements ICartService {
   @Override
   public void updateItemsToCart(CartRequest request) {
     try {
-      var cart = findCartByCustomerId(request.getCustomerId());
+      var cart = cartRepository.findCartByCustomerId(request.getCustomerId()).orElseThrow(() ->
+              new CartNotFoundException(messageSource.getMessage("EBL201B", null, Locale.ENGLISH)));
+      
       if (!CollectionUtils.isEmpty(cart.getCartDetails())) {
         var cartDetail = cartDetailRepository.findById(request.getCartDetail().getId())
                 .orElseThrow(() ->
@@ -128,6 +135,8 @@ public class CartServiceImpl implements ICartService {
     } catch (QuantityLessThanOneException e) {
       throw new QuantityLessThanOneException(messageSource.getMessage("EBL202", null,
               Locale.ENGLISH));
+    } catch (CartNotFoundException e) {
+      new CartNotFoundException(messageSource.getMessage("EBL201B", null, Locale.ENGLISH));
     } catch (ItemNotFoundException e) {
       throw new ItemNotFoundException(messageSource.getMessage("EBL102C", null, Locale.ENGLISH));
     } catch (CartDetailNotFoundException e) {
