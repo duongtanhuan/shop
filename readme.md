@@ -37,8 +37,7 @@ Database connection
 * spring.datasource.url=jdbc:mysql://localhost:3306/shop?useSSL=false
 * spring.datasource.username=root
 * spring.datasource.password=123456
-* spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-* spring.jpa.database-platform = org.hibernate.dialect.MySQL8Dialect
+
 
 Application port
 * server.port=8080
@@ -88,4 +87,5 @@ Cart detail
 | :---:   | :---: | :---: |
 | findCartDetailByItemId | GET  | localhost:8080/cartDetails/{itemId} |
 
-
+Run default script
+* It was config in properties file.
